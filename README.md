@@ -1,4 +1,4 @@
-# LogInj
+# Logisim Injector
 Logisim Circuit Injector
 
 ### Inputs
