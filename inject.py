@@ -47,15 +47,16 @@ def query_yes_no(question, default="yes"):
 
 
 print("\nLogisim Injector by Stephan Kaminsky " + version + "\nCheck for updates here: https://github.com/ThaumicMekanism/LogisimInjector\n")
-print("[INFO] Checking for updates...")
+etext = "[INFO] Checking for updates..."
+print(etext, end="\r")
 try:
     urldata = urllib.request.urlopen(updateurl).read().decode("utf-8", "ignore")
     if version in urldata:
-        print("[INFO] This is the latest version!")
+        print(etext + "Done!\n[INFO] This is the latest version!")
     else:
-        print("[WARNING] This is not the latest version!")
+        print(etext + "Done!\n[WARNING] This is not the latest version!")
 except Exception as e:
-    print("[ERROR] Could not check if this is the latest version!")
+    print(etext + "ERROR!\n[ERROR] Could not check if this is the latest version!")
 
 
 print()
