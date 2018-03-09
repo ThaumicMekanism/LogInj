@@ -46,8 +46,9 @@ def query_yes_no(question, default="yes"):
             print("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
-
-print("\nLogisim Injector by Stephan Kaminsky " + version + "\nCheck for updates here: https://github.com/ThaumicMekanism/LogisimInjector\n")
+print("\n#####################################################################################")
+print("Logisim Injector by Stephan Kaminsky v" + version + "\nCheck for updates here: https://github.com/ThaumicMekanism/LogisimInjector")
+print("#####################################################################################\n")
 etext = "[INFO] Checking for updates..."
 print(etext, end="\r")
 try:
