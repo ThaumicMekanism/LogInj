@@ -4,16 +4,18 @@
     Created by Stephan Kaminsky to inject separate subcircuit files into one circuit file in logisim.
 '''
 
-version = "1.0.3"
+version = "1.0.4"
 updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
 
 import sys
+import re
 import xml.etree.ElementTree
 import os
 import datetime
 from shutil import copyfile
 from shutil import move
 import urllib.request
+from distutils.version import StrictVersion
 
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
@@ -56,19 +58,23 @@ try:
     if version in urldata:
         print(etext + "Done!\n[INFO] This is the latest version!")
     else:
-        print(etext + "Done!\n[WARNING] This is not the latest version!")
-        if query_yes_no("Do you want to update the script?"):
-            directory, name = os.path.split(__file__)
-            updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
-            updatename = "update.py"
-            urllib.request.urlretrieve(updateurl, updatename)
-            move(updatename, name)
-            print("Updated! Executing updated script...\n-------------------------------------------------------------------------------------\n")
-            exec(compile(open(name, "rb").read(), name, 'exec'))
-            exit(0)
+        m = re.search("version = \"(.+?)\"", urldata)
+        newestv = m.group(1)
+        if StrictVersion(newestv) > StrictVersion(version):
+            print(etext + "Done!\n[WARNING] This is not the latest version! Newer version v" + newestv + " detected!")
+            if query_yes_no("Do you want to update the script?"):
+                directory, name = os.path.split(__file__)
+                updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
+                updatename = "update.py"
+                urllib.request.urlretrieve(updateurl, updatename)
+                move(updatename, name)
+                print("Updated! Executing updated script...\n-------------------------------------------------------------------------------------\n")
+                exec(compile(open(name, "rb").read(), name, 'exec'))
+                exit(0)
+        else:
+            print(etext + "Done!\n[INFO] You are on a newer version.")
 except Exception as e:
     print(etext + "ERROR!\n[ERROR] Could not check if this is the latest version!")
-
 
 print()
 if (len(sys.argv) != 4):
