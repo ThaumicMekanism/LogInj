@@ -9,10 +9,24 @@ import xml.etree.ElementTree
 import os
 import datetime
 from shutil import copyfile
+import urllib.request
 
-version = "1.0.0"
+version = "1.0.1"
+updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
 
 print("\nLogisim Injector by Stephan Kaminsky " + version + "\nCheck for updates here: https://github.com/ThaumicMekanism/LogisimInjector\n")
+print("[INFO] Checking for updates...")
+try:
+    urldata = urllib.request.urlopen(updateurl).read().decode("utf-8", "ignore")
+    if version in urldata:
+        print("[INFO] This is the latest version!")
+    else:
+        print("[WARNING] This is not the latest version!")
+except Exception as e:
+    print("[ERROR] Could not check if this is the latest version!")
+
+
+print()
 if (len(sys.argv) != 4):
     print("[ERROR] Please make sure you have inputed the four arguments: destination_file source_file source_circ_name");
     exit(-1);
