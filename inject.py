@@ -4,7 +4,7 @@
     Created by Stephan Kaminsky to inject separate subcircuit files into one circuit file in logisim.
 '''
 
-version = "1.0.2"
+version = "1.0.3"
 updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
 
 import sys
@@ -12,6 +12,7 @@ import xml.etree.ElementTree
 import os
 import datetime
 from shutil import copyfile
+from shutil import move
 import urllib.request
 
 def query_yes_no(question, default="yes"):
@@ -55,6 +56,15 @@ try:
         print(etext + "Done!\n[INFO] This is the latest version!")
     else:
         print(etext + "Done!\n[WARNING] This is not the latest version!")
+        if query_yes_no("Do you want to update the script?"):
+            directory, name = os.path.split(__file__)
+            updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
+            updatename = "update.py"
+            urllib.request.urlretrieve(updateurl, updatename)
+            move(updatename, name)
+            print("Updated! Executing updated script...")
+            exec(compile(open(name, "rb").read(), name, 'exec'))
+            exit(0)
 except Exception as e:
     print(etext + "ERROR!\n[ERROR] Could not check if this is the latest version!")
 
