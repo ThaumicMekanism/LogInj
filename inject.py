@@ -63,7 +63,7 @@ try:
             updatename = "update.py"
             urllib.request.urlretrieve(updateurl, updatename)
             move(updatename, name)
-            print("Updated! Executing updated script...")
+            print("Updated! Executing updated script...\n-------------------------------------------------------------------------------------\n")
             exec(compile(open(name, "rb").read(), name, 'exec'))
             exit(0)
 except Exception as e:
