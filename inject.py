@@ -10,7 +10,9 @@ import os
 import datetime
 from shutil import copyfile
 
-print()
+version = "1.0.0"
+
+print("\nLogisim Injector by Stephan Kaminsky " + version + "\nCheck for updates here: https://github.com/ThaumicMekanism/LogisimInjector\n")
 if (len(sys.argv) != 4):
     print("[ERROR] Please make sure you have inputed the four arguments: destination_file source_file source_circ_name");
     exit(-1);
