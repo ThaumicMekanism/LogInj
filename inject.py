@@ -4,7 +4,7 @@
     Created by Stephan Kaminsky to inject separate subcircuit files into one circuit file in logisim.
 '''
 
-version = "1.0.4"
+version = "1.1.1"
 updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
 
 import sys
@@ -130,7 +130,7 @@ print("[INFO] Found subcircuit '" + source_circ_name + "' in source file '" + so
 
 for subcirc in dest_xml.findall('circuit'):
     if (subcirc.get('name') == source_circ_name):
-        if query_yes_no("A circuit with the name '" + source_circ_name + "' was already found in the source file! Do you want to remove it to add the new circuit?"):
+        if query_yes_no("A circuit with the name '" + source_circ_name + "' was already found in the source file!\nDo you want to remove it to add the new circuit?"):
             print("[INFO] Removing...", end="\r")
             dest_xml.getroot().remove(subcirc)
             print("[INFO] Removing...Done!")
