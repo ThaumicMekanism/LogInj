@@ -4,7 +4,7 @@
     Created by Stephan Kaminsky to inject separate subcircuit files into one circuit file in logisim.
 '''
 
-version = "1.1.1"
+version = "1.1.2"
 updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
 
 import sys
@@ -72,7 +72,7 @@ try:
                 exec(compile(open(name, "rb").read(), name, 'exec'))
                 exit(0)
         else:
-            print(etext + "Done!\n[INFO] You are on a newer version.")
+            print(etext + "Done!\n[INFO] You are on a newer version. The latest released version is v" + newestv + ".")
 except Exception as e:
     print(etext + "ERROR!\n[ERROR] Could not check if this is the latest version!")
 
