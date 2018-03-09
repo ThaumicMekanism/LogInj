@@ -4,6 +4,9 @@
     Created by Stephan Kaminsky to inject separate subcircuit files into one circuit file in logisim.
 '''
 
+version = "1.0.2"
+updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
+
 import sys
 import xml.etree.ElementTree
 import os
@@ -11,8 +14,37 @@ import datetime
 from shutil import copyfile
 import urllib.request
 
-version = "1.0.1"
-updateurl = "https://raw.githubusercontent.com/ThaumicMekanism/LogisimInjector/master/inject.py"
+def query_yes_no(question, default="yes"):
+    """Ask a yes/no question via raw_input() and return their answer.
+
+    "question" is a string that is presented to the user.
+    "default" is the presumed answer if the user just hits <Enter>.
+        It must be "yes" (the default), "no" or None (meaning
+        an answer is required of the user).
+
+    The "answer" return value is True for "yes" or False for "no".
+    """
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
+    if default is None:
+        prompt = " [y/n] "
+    elif default == "yes":
+        prompt = " [Y/n] "
+    elif default == "no":
+        prompt = " [y/N] "
+    else:
+        raise ValueError("invalid default answer: '%s'" % default)
+
+    while True:
+        choice = input(question + prompt)
+        if default is not None and choice == '':
+            return valid[default]
+        elif choice in valid:
+            return valid[choice]
+        else:
+            print("Please respond with 'yes' or 'no' "
+                             "(or 'y' or 'n').\n")
+
 
 print("\nLogisim Injector by Stephan Kaminsky " + version + "\nCheck for updates here: https://github.com/ThaumicMekanism/LogisimInjector\n")
 print("[INFO] Checking for updates...")
@@ -46,23 +78,25 @@ newname = os.path.realpath(FilePath) + "_preinj_" + timeStamp + ".bak"
 copyfile(os.path.realpath(FilePath), newname)
 
 
-print("[INFO] Attempting to add subcircuit '" + source_circ_name + "' in file '" + source_file + "' to the destination file '" + dest_file + "'\n")
+print("[INFO] Attempting to add subcircuit '" + source_circ_name + "' in file '" + source_file + "' to the destination file '" + dest_file + "'...\n")
 
+etext = "[INFO] Parsing destination file's xml..."
+print(etext, end="\r")
 try:
-    print("[INFO] Parsing destination file's xml...")
     dest_xml = xml.etree.ElementTree.parse(dest_file)
 except Exception as e:
     print("\n[ERROR] An error has occured!\n")
     raise e
-print("[INFO] Parsing succeeded!\n")
+print(etext + "Done!\n")
 
+etext = "[INFO] Parsing source file's xml..."
+print(etext, end="\r")
 try:
-    print("[INFO] Parsing source file's xml...")
     source_xml = xml.etree.ElementTree.parse(source_file)
 except Exception as e:
     print("\n[ERROR] An error has occured!\n")
     raise e
-print("[INFO] Parsing succeeded!\n")
+print(etext + "Done!\n")
 
 source_circ_xml = None
 for subcirc in source_xml.findall('circuit'):
@@ -76,8 +110,21 @@ if (source_circ_xml == None):
 
 print("[INFO] Found subcircuit '" + source_circ_name + "' in source file '" + source_file + "'!\n")
 
+for subcirc in dest_xml.findall('circuit'):
+    if (subcirc.get('name') == source_circ_name):
+        if query_yes_no("A circuit with the name '" + source_circ_name + "' was already found in the source file! Do you want to remove it to add the new circuit?"):
+            print("[INFO] Removing...", end="\r")
+            dest_xml.getroot().remove(subcirc)
+            print("[INFO] Removing...Done!")
+        else:
+            if not query_yes_no("Do you still want to continue to add the duplicate circuit?"):
+                print("[WARNING] Exiting...")
+                exit(0)
 
+etext = "[INFO] Editing destination file..."
+print(etext, end="\r")
 dest_xml.getroot().append(source_circ_xml)
 dest_xml.write(dest_file)
+print(etext + "Done!")
 print("[Success]")
 exit(0)
