@@ -12,4 +12,4 @@ This file will first back up your logisim destination file. It then checks to se
 
 ### How to use
 
-`python inject.py dest.circ source.circ subcircuit`
+`python inject.py dest.circ source.circ subcircuitName`
